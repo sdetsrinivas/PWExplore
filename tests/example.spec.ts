@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { RegisterPage } from "../Pages/register";
 
-test.skip("Verify user can enter first and last name", async ({ page }) => {
+test("Verify user can enter first and last name", async ({ page }) => {
   const register = new RegisterPage(page);
 
   await register.navigate();
@@ -12,7 +12,7 @@ test.skip("Verify user can enter first and last name", async ({ page }) => {
   await expect(register.lastName).toHaveValue("Doe");
 });
 
-test.skip("Verify user is able to select english and French langugage from autocomplete textBox", async ({
+test("Verify user is able to select english and French langugage from autocomplete textBox", async ({
   page,
 }) => {
   const register = new RegisterPage(page);
@@ -45,4 +45,27 @@ test("Verify user is able to see all languages", async ({ page }) => {
   });
 
   await register.printLanguages();
+});
+
+test("Verify email id tooltip", async ({ page }) => {
+  const register = new RegisterPage(page);
+
+  await register.navigate();
+
+  await register.hoverEmail();
+
+  await expect(register.emailTooltip).toBeVisible();
+
+  await expect(register.emailTooltip).toHaveText(
+    "Provide a valid email id for further updates"
+  );
+});
+
+test("verify user can select male gender", async ({ page }) => {
+  const register = new RegisterPage(page);
+
+  await register.navigate();
+
+  await register.maleRadio.check();
+  await expect(register.maleRadio).toBeChecked();
 });
