@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 
 if (process.env.TEST_ENV) {
   dotenv.config({ path: `./Env/.env.${process.env.TEST_ENV}` });
-  console.log(`Using environment config file: .env.+${process.env.TEST_ENV}`);
+  console.log(`Using environment config file: .env.${process.env.TEST_ENV}`);
 } else {
   console.log("Using default environment config file");
   dotenv.config({ path: `./Env/.env.default` });

@@ -1,5 +1,17 @@
 import { test, expect } from "@playwright/test";
 import { RegisterPage } from "../Pages/register";
+import { DownloadPage } from "../Pages/download";
+import fs from "fs/promises";
+import path from "path";
+
+test.beforeEach(async ({}) => {
+  //Check download folder and delete existing files
+  const downloadDir = "./Downloads";
+  const files = await fs.readdir(downloadDir);
+  for (const file of files) {
+    await fs.unlink(path.join(downloadDir, file));
+  }
+});
 
 test("Verify user can enter first and last name", async ({ page }) => {
   const register = new RegisterPage(page);
@@ -65,4 +77,27 @@ test("verify user can select male gender", async ({ page }) => {
   await register.navigate();
   await register.maleRadio.check();
   await expect(register.maleRadio).toBeChecked();
+});
+
+test("verify user able to upload file succesfully", async ({ page }) => {
+  const register = new RegisterPage(page);
+  await register.navigate();
+  await register.hoverMoreLink();
+  await register.clickDownloadLink();
+  const download = new DownloadPage(page);
+  await download.enterText("Sample text for download");
+  await download.clickGenerate();
+  await expect(download.downloadLink).toBeVisible();
+  const [downloadEvent] = await Promise.all([
+    page.waitForEvent("download"),
+    download.clickDownload(),
+  ]);
+  const timestamp = Date.now();
+  const uniqueFileName = `${timestamp}-${downloadEvent.suggestedFilename()}`;
+  const saveDir = "./Downloads";
+  await downloadEvent.saveAs(`${saveDir}/${uniqueFileName}`);
+  //Validate the downloaded file under download folder
+  const fullPath = path.resolve(saveDir, uniqueFileName);
+  const stats = await fs.stat(fullPath);
+  await expect(stats.isFile()).toBeTruthy();
 });

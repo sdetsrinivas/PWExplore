@@ -8,6 +8,8 @@ export class RegisterPage {
   readonly emailId: Locator;
   readonly emailTooltip: Locator;
   readonly maleRadio: Locator;
+  readonly downloadLink: Locator;
+  readonly moreLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -20,6 +22,8 @@ export class RegisterPage {
       name: "Male",
       exact: true,
     });
+    this.downloadLink = this.page.getByRole("link", { name: "File Download" });
+    this.moreLink = this.page.getByRole("link", { name: "More" });
   }
 
   async navigate() {
@@ -51,8 +55,15 @@ export class RegisterPage {
       console.log(await language.textContent());
     }
   }
+  async clickDownloadLink() {
+    await this.downloadLink.click();
+  }
 
   async hoverEmail() {
     await this.emailId.hover();
+  }
+
+  async hoverMoreLink() {
+    await this.moreLink.hover();
   }
 }
