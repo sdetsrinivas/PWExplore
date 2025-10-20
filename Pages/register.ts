@@ -10,6 +10,7 @@ export class RegisterPage {
   readonly maleRadio: Locator;
   readonly downloadLink: Locator;
   readonly moreLink: Locator;
+  readonly fileUploadLnk: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -24,6 +25,7 @@ export class RegisterPage {
     });
     this.downloadLink = this.page.getByRole("link", { name: "File Download" });
     this.moreLink = this.page.getByRole("link", { name: "More" });
+    this.fileUploadLnk = this.page.getByRole("link", { name: "File Upload" });
   }
 
   async navigate() {
