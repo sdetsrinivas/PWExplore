@@ -55,7 +55,6 @@ test("Verify email id tooltip", async ({ page }) => {
   await register.hoverEmail();
 
   await expect(register.emailTooltip).toBeVisible();
-
   await expect(register.emailTooltip).toHaveText(
     "Provide a valid email id for further updates"
   );
@@ -63,9 +62,7 @@ test("Verify email id tooltip", async ({ page }) => {
 
 test("verify user can select male gender", async ({ page }) => {
   const register = new RegisterPage(page);
-
   await register.navigate();
-
   await register.maleRadio.check();
   await expect(register.maleRadio).toBeChecked();
 });
