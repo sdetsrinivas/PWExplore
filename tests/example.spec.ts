@@ -85,7 +85,7 @@ test("verify user can select male gender", async ({ page }) => {
   await expect(register.maleRadio).toBeChecked();
 });
 
-test.only("verify user able to download file succesfully", async ({ page }) => {
+test("verify user able to download file succesfully", async ({ page }) => {
   const register = new RegisterPage(page);
   await register.navigate();
   await register.hoverMoreLink();
