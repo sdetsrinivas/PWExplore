@@ -2,12 +2,17 @@ import { test, expect } from "@playwright/test";
 import { RegisterPage } from "../Pages/register";
 import { DownloadPage } from "../Pages/download";
 import { UploadPage } from "../Pages/upload";
+import { Common } from "../Utils/common";
 import fs from "fs/promises";
 import path from "path";
 
 test.beforeEach(async ({}) => {
-  //Check download folder and delete existing files
+  //If download folder doesn't exist, create it
   const downloadDir = "./Downloads";
+  if (!(await Common.checkFileExists(downloadDir))) {
+    await fs.mkdir(downloadDir);
+  }
+  //Check download folder and delete existing files
   const files = await fs.readdir(downloadDir);
   for (const file of files) {
     await fs.unlink(path.join(downloadDir, file));
@@ -80,7 +85,7 @@ test("verify user can select male gender", async ({ page }) => {
   await expect(register.maleRadio).toBeChecked();
 });
 
-test("verify user able to download file succesfully", async ({ page }) => {
+test.only("verify user able to download file succesfully", async ({ page }) => {
   const register = new RegisterPage(page);
   await register.navigate();
   await register.hoverMoreLink();
