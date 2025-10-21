@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { RegisterPage } from "../Pages/register";
 import { DownloadPage } from "../Pages/download";
+import { UploadPage } from "../Pages/upload";
 import fs from "fs/promises";
 import path from "path";
 
@@ -104,23 +105,24 @@ test("verify user able to download file succesfully", async ({ page }) => {
 
 test("verify user able to upload file succesfully", async ({ page }) => {
   const register = new RegisterPage(page);
+  const upload = new UploadPage(page);
   await register.navigate();
   await register.hoverMoreLink();
-  await register.clickDownloadLink();
-  const download = new DownloadPage(page);
-  await download.enterText("Sample text for download");
-  await download.clickGenerate();
-  await expect(download.downloadLink).toBeVisible();
-  const [downloadEvent] = await Promise.all([
-    page.waitForEvent("download"),
-    download.clickDownload(),
+  await register.clickFileUploadLink();
+  //Upload the file using method 1
+  const filePath = path.resolve("./Resources", "dosa.jpeg");
+  await upload.uploadFile(filePath);
+});
+
+test("verify user able to upload file using file chooser", async ({ page }) => {
+  const register = new RegisterPage(page);
+  await register.navigate();
+  const filePath = path.resolve("./Resources", "dosa.jpeg");
+  //Upload the file using method 2
+  const [uploadFiles] = await Promise.all([
+    page.waitForEvent("filechooser"),
+    page.getByRole("button", { name: "Choose File" }).click(), // Triggers the file chooser
   ]);
-  const timestamp = Date.now();
-  const uniqueFileName = `${timestamp}-${downloadEvent.suggestedFilename()}`;
-  const saveDir = "./Downloads";
-  await downloadEvent.saveAs(`${saveDir}/${uniqueFileName}`);
-  //Validate the downloaded file under download folder
-  const fullPath = path.resolve(saveDir, uniqueFileName);
-  const stats = await fs.stat(fullPath);
-  await expect(stats.isFile()).toBeTruthy();
+  await uploadFiles.setFiles(filePath);
+  await await page.waitForTimeout(7000); // For demo purpose only
 });

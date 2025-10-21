@@ -11,6 +11,7 @@ export class RegisterPage {
   readonly downloadLink: Locator;
   readonly moreLink: Locator;
   readonly fileUploadLnk: Locator;
+  readonly thumbnailUploadLnk: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -26,6 +27,9 @@ export class RegisterPage {
     this.downloadLink = this.page.getByRole("link", { name: "File Download" });
     this.moreLink = this.page.getByRole("link", { name: "More" });
     this.fileUploadLnk = this.page.getByRole("link", { name: "File Upload" });
+    this.thumbnailUploadLnk = this.page.getByRole("button", {
+      name: "Choose File",
+    });
   }
 
   async navigate() {
@@ -67,5 +71,9 @@ export class RegisterPage {
 
   async hoverMoreLink() {
     await this.moreLink.hover();
+  }
+
+  async clickFileUploadLink() {
+    await this.fileUploadLnk.click();
   }
 }
