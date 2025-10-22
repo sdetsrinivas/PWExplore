@@ -1,13 +1,8 @@
 import { test, expect } from "../Fixtures/fixtures";
-import { RegisterPage } from "../Pages/register";
-import { DownloadPage } from "../Pages/download";
-import { UploadPage } from "../Pages/upload";
 import fs from "fs/promises";
 import path from "path";
 
-test("Verify user can enter first and last name", async ({ page }) => {
-  const register = new RegisterPage(page);
-
+test("Verify user can enter first and last name", async ({ register }) => {
   await register.navigate();
   await register.enterFirstName("John");
   await register.enterLastName("Doe");
@@ -17,10 +12,8 @@ test("Verify user can enter first and last name", async ({ page }) => {
 });
 
 test("Verify user is able to select english and French langugage from autocomplete textBox", async ({
-  page,
+  register,
 }) => {
-  const register = new RegisterPage(page);
-
   await register.navigate();
 
   await register.clickLanguage();
@@ -36,9 +29,7 @@ test("Verify user is able to select english and French langugage from autocomple
   console.log(await register.language.textContent());
 });
 
-test("Verify user is able to see all languages", async ({ page }) => {
-  const register = new RegisterPage(page);
-
+test("Verify user is able to see all languages", async ({ page, register }) => {
   await register.navigate();
 
   await register.clickLanguage();
@@ -51,9 +42,7 @@ test("Verify user is able to see all languages", async ({ page }) => {
   await register.printLanguages();
 });
 
-test("Verify email id tooltip", async ({ page }) => {
-  const register = new RegisterPage(page);
-
+test("Verify email id tooltip", async ({ register }) => {
   await register.navigate();
 
   await register.hoverEmail();
@@ -64,19 +53,20 @@ test("Verify email id tooltip", async ({ page }) => {
   );
 });
 
-test("verify user can select male gender", async ({ page }) => {
-  const register = new RegisterPage(page);
+test("verify user can select male gender", async ({ register }) => {
   await register.navigate();
   await register.maleRadio.check();
   await expect(register.maleRadio).toBeChecked();
 });
 
-test.only("verify user able to download file succesfully", async ({ page }) => {
-  const register = new RegisterPage(page);
+test("verify user able to download file succesfully", async ({
+  page,
+  register,
+  download,
+}) => {
   await register.navigate();
   await register.hoverMoreLink();
   await register.clickDownloadLink();
-  const download = new DownloadPage(page);
   await download.enterText("Sample text for download");
   await download.clickGenerate();
   await expect(download.downloadLink).toBeVisible();
@@ -94,9 +84,10 @@ test.only("verify user able to download file succesfully", async ({ page }) => {
   await expect(stats.isFile()).toBeTruthy();
 });
 
-test("verify user able to upload file succesfully", async ({ page }) => {
-  const register = new RegisterPage(page);
-  const upload = new UploadPage(page);
+test("verify user able to upload file succesfully", async ({
+  register,
+  upload,
+}) => {
   await register.navigate();
   await register.hoverMoreLink();
   await register.clickFileUploadLink();
@@ -105,8 +96,10 @@ test("verify user able to upload file succesfully", async ({ page }) => {
   await upload.uploadFile(filePath);
 });
 
-test("verify user able to upload file using file chooser", async ({ page }) => {
-  const register = new RegisterPage(page);
+test("verify user able to upload file using file chooser", async ({
+  page,
+  register,
+}) => {
   await register.navigate();
   const filePath = path.resolve("./Resources", "dosa.jpeg");
   //Upload the file using method 2

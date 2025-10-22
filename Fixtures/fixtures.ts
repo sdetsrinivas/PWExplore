@@ -3,8 +3,28 @@ import { test as base, expect } from "@playwright/test";
 import fs from "fs"; // for existsSync
 import { promises as fsp } from "fs";
 import path from "path";
+import { RegisterPage } from "../Pages/register";
+import { UploadPage } from "../Pages/upload";
+import { DownloadPage } from "../Pages/download";
 
-export const test = base.extend({});
+type pages = {
+  // Define any custom fixtures here if needed
+  register: RegisterPage;
+  upload: UploadPage;
+  download: DownloadPage;
+};
+
+export const test = base.extend<pages>({
+  register: async ({ page }, use) => {
+    await use(new RegisterPage(page));
+  },
+  upload: async ({ page }, use) => {
+    await use(new UploadPage(page));
+  },
+  download: async ({ page }, use) => {
+    await use(new DownloadPage(page));
+  },
+});
 
 // Prepare a clean Downloads directory before each test that uses our `test`
 test.beforeEach(async () => {
