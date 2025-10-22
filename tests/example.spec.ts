@@ -1,23 +1,9 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../Fixtures/fixtures";
 import { RegisterPage } from "../Pages/register";
 import { DownloadPage } from "../Pages/download";
 import { UploadPage } from "../Pages/upload";
-import { Common } from "../Utils/common";
 import fs from "fs/promises";
 import path from "path";
-
-test.beforeEach(async ({}) => {
-  //If download folder doesn't exist, create it
-  const downloadDir = "./Downloads";
-  if (!(await Common.checkFileExists(downloadDir))) {
-    await fs.mkdir(downloadDir);
-  }
-  //Check download folder and delete existing files
-  const files = await fs.readdir(downloadDir);
-  for (const file of files) {
-    await fs.unlink(path.join(downloadDir, file));
-  }
-});
 
 test("Verify user can enter first and last name", async ({ page }) => {
   const register = new RegisterPage(page);
@@ -85,7 +71,7 @@ test("verify user can select male gender", async ({ page }) => {
   await expect(register.maleRadio).toBeChecked();
 });
 
-test("verify user able to download file succesfully", async ({ page }) => {
+test.only("verify user able to download file succesfully", async ({ page }) => {
   const register = new RegisterPage(page);
   await register.navigate();
   await register.hoverMoreLink();
@@ -129,5 +115,4 @@ test("verify user able to upload file using file chooser", async ({ page }) => {
     page.getByRole("button", { name: "Choose File" }).click(), // Triggers the file chooser
   ]);
   await uploadFiles.setFiles(filePath);
-  await await page.waitForTimeout(7000); // For demo purpose only
 });
