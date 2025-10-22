@@ -63,6 +63,7 @@ test("verify user able to download file succesfully", async ({
   page,
   register,
   download,
+  downloadPath,
 }) => {
   await register.navigate();
   await register.hoverMoreLink();
@@ -76,12 +77,14 @@ test("verify user able to download file succesfully", async ({
   ]);
   const timestamp = Date.now();
   const uniqueFileName = `${timestamp}-${downloadEvent.suggestedFilename()}`;
-  const saveDir = "./Downloads";
-  await downloadEvent.saveAs(`${saveDir}/${uniqueFileName}`);
-  //Validate the downloaded file under download folder
-  const fullPath = path.resolve(saveDir, uniqueFileName);
-  const stats = await fs.stat(fullPath);
-  await expect(stats.isFile()).toBeTruthy();
+  const savePath = path.join(downloadPath, uniqueFileName);
+  await downloadEvent.saveAs(savePath);
+  // Validate the downloaded file exists
+  const fileExists = await fs
+    .access(savePath)
+    .then(() => true)
+    .catch(() => false);
+  expect(fileExists).toBeTruthy();
 });
 
 test("verify user able to upload file succesfully", async ({

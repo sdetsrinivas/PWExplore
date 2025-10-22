@@ -1,6 +1,5 @@
 // Implementing custom fixtures here
-import { test as base, expect } from "@playwright/test";
-import fs from "fs"; // for existsSync
+import { test as base, expect, type TestInfo } from "@playwright/test";
 import { promises as fsp } from "fs";
 import path from "path";
 import { RegisterPage } from "../Pages/register";
@@ -12,6 +11,7 @@ type pages = {
   register: RegisterPage;
   upload: UploadPage;
   download: DownloadPage;
+  downloadPath: string;
 };
 
 export const test = base.extend<pages>({
@@ -24,22 +24,18 @@ export const test = base.extend<pages>({
   download: async ({ page }, use) => {
     await use(new DownloadPage(page));
   },
-});
-
-// Prepare a clean Downloads directory before each test that uses our `test`
-test.beforeEach(async () => {
-  const downloadDir = path.resolve("./Downloads");
-
-  // Create directory if it doesn't exist
-  if (!fs.existsSync(downloadDir)) {
+  downloadPath: async ({}, use, testInfo) => {
+    const downloadDir = testInfo.outputPath("downloads");
     await fsp.mkdir(downloadDir, { recursive: true });
-  }
 
-  // Remove all files (non-recursive) inside the download directory
-  const files = await fsp.readdir(downloadDir);
-  for (const file of files) {
-    await fsp.unlink(path.join(downloadDir, file));
-  }
+    // Optionally clean it (should be empty anyway, but safe)
+    const files = await fsp.readdir(downloadDir);
+    await Promise.all(
+      files.map((file) => fsp.unlink(path.join(downloadDir, file)))
+    );
+
+    await use(downloadDir);
+  },
 });
 
 export { expect };
