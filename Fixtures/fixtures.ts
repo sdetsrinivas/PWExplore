@@ -5,12 +5,14 @@ import path from "path";
 import { RegisterPage } from "../Pages/register";
 import { UploadPage } from "../Pages/upload";
 import { DownloadPage } from "../Pages/download";
+import { AlertPage } from "../Pages/alert";
 
 type pages = {
   // Define any custom fixtures here if needed
   register: RegisterPage;
   upload: UploadPage;
   download: DownloadPage;
+  alert: AlertPage;
   downloadPath: string;
 };
 
@@ -23,6 +25,9 @@ export const test = base.extend<pages>({
   },
   download: async ({ page }, use) => {
     await use(new DownloadPage(page));
+  },
+  alert: async ({ page }, use) => {
+    await use(new AlertPage(page));
   },
   downloadPath: async ({}, use, testInfo) => {
     const downloadDir = testInfo.outputPath("downloads");
