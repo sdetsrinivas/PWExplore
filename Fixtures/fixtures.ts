@@ -6,6 +6,7 @@ import { RegisterPage } from "../Pages/register";
 import { UploadPage } from "../Pages/upload";
 import { DownloadPage } from "../Pages/download";
 import { AlertPage } from "../Pages/alert";
+import { WindowsPage } from "../Pages/windows";
 
 type pages = {
   // Define any custom fixtures here if needed
@@ -13,6 +14,7 @@ type pages = {
   upload: UploadPage;
   download: DownloadPage;
   alert: AlertPage;
+  windows: WindowsPage;
   downloadPath: string;
 };
 
@@ -42,6 +44,9 @@ export const test = base.extend<pages>({
   },
   alert: async ({ page }, use) => {
     await use(new AlertPage(page));
+  },
+  windows: async ({ page }, use) => {
+    await use(new WindowsPage(page));
   },
 
   // Download path fixture
