@@ -17,6 +17,19 @@ type pages = {
 };
 
 export const test = base.extend<pages>({
+  //Extend the exsting fixture page to handle JS error
+  page: async ({ page }, use) => {
+    const errors: Array<string> = [];
+    // Listen for console messages
+    page.on("pageerror", (msg) => {
+      errors.push(msg.message);
+    });
+    await use(page);
+    // After the test, check if there were any errors
+    expect(errors, `JS errors on page: \n${errors.join("\n")}`).toEqual([]);
+  },
+
+  //Page objects as fixtures
   register: async ({ page }, use) => {
     await use(new RegisterPage(page));
   },
@@ -29,6 +42,8 @@ export const test = base.extend<pages>({
   alert: async ({ page }, use) => {
     await use(new AlertPage(page));
   },
+
+  // Download path fixture
   downloadPath: async ({}, use, testInfo) => {
     const downloadDir = testInfo.outputPath("downloads");
     await fsp.mkdir(downloadDir, { recursive: true });
