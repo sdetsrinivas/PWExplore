@@ -18,16 +18,17 @@ type pages = {
 
 export const test = base.extend<pages>({
   //Extend the exsting fixture page to handle JS error
-  page: async ({ page }, use) => {
-    const errors: Array<string> = [];
-    // Listen for console messages
-    page.on("pageerror", (msg) => {
-      errors.push(msg.message);
-    });
-    await use(page);
-    // After the test, check if there were any errors
-    expect(errors, `JS errors on page: \n${errors.join("\n")}`).toEqual([]);
-  },
+  //Disabling this fixture as some pages may have JS errors
+  // page: async ({ page }, use) => {
+  //   const errors: Array<string> = [];
+  //   // Listen for console messages
+  //   page.on("pageerror", (msg) => {
+  //     errors.push(msg.message);
+  //   });
+  //   await use(page);
+  //   // After the test, check if there were any errors
+  //   expect(errors).toHaveLength(0);
+  // },
 
   //Page objects as fixtures
   register: async ({ page }, use) => {

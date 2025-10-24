@@ -12,6 +12,7 @@ export class RegisterPage {
   readonly moreLink: Locator;
   readonly fileUploadLnk: Locator;
   readonly thumbnailUploadLnk: Locator;
+  readonly skillsDropdown: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -30,6 +31,7 @@ export class RegisterPage {
     this.thumbnailUploadLnk = this.page.getByRole("button", {
       name: "Choose File",
     });
+    this.skillsDropdown = this.page.locator("#Skills");
   }
 
   async navigate() {
