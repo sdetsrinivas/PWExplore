@@ -67,32 +67,38 @@ test("verify user can handle multiple tabs", async ({ page, windows }) => {
   console.log("New Window 1 URL: " + newWindowPage1.url());
   await newWindowPage1.bringToFront();
   //sleep for 5 seconds
-  await page.waitForTimeout(5000);
+  await page.waitForTimeout(2500);
   await newWindowPage2.bringToFront();
   //sleep for 5 seconds
-  await page.waitForTimeout(5000);
+  await page.waitForTimeout(2500);
   console.log("New Window 2 URL: " + newWindowPage2.url());
 });
 
 test("verify user can handle multiple tabs using browser context", async ({
   windows,
-  page,
   context,
 }) => {
   await windows.navigate();
   await windows.clickMultipleWindowsLink();
   await windows.clickClickBtn();
 
-  const pages = context.pages();
+  // Wait up to 5s, checking every 500 ms until there are 3 pages
+  const maxWaitTime = 5000;
+  const pollInterval = 500;
+  const startTime = Date.now();
 
-  //Just added waits to see all pages are loaded
-  console.log(pages.length);
+  let pages = context.pages();
+  while (pages.length < 3 && Date.now() - startTime < maxWaitTime) {
+    await new Promise((r) => setTimeout(r, pollInterval));
+    pages = context.pages();
+  }
+
+  console.log("Total opened pages: " + pages.length);
+
   console.log(pages[0].url());
   console.log(pages[1].url());
   console.log(pages[2].url());
   await pages[0].bringToFront();
-  await page.waitForTimeout(2000);
   await pages[1].bringToFront();
-  await page.waitForTimeout(2000);
   await pages[2].bringToFront();
 });
