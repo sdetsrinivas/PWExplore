@@ -52,7 +52,7 @@ export default defineConfig({
     },
     {
       name: "orangeCRM",
-      testDir: "./tests",
+      testDir: "./tests-crm",
       use: {
         ...devices["Desktop Chrome"],
         storageState: "auth/storageState.json",
