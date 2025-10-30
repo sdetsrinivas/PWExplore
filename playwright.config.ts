@@ -18,7 +18,7 @@ if (process.env.TEST_ENV) {
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: "./tests",
+  //testDir: "./tests",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -41,8 +41,23 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "chromium",
+      name: "demo-tests",
+      testDir: "./tests",
       use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "setup",
+      use: { ...devices["Desktop Chrome"] },
+      testDir: "./Setup",
+    },
+    {
+      name: "orangeCRM",
+      testDir: "./tests",
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "auth/storageState.json",
+      },
+      dependencies: ["setup"],
     },
 
     // {

@@ -9,6 +9,7 @@ import { AlertPage } from "../Pages/alert";
 import { WindowsPage } from "../Pages/windows";
 import { FramesPage } from "../Pages/frames";
 import { DynamicPage } from "../Pages/dynamic";
+import { DashboardPage } from "../Pages/dashboard";
 
 type pages = {
   // Define any custom fixtures here if needed
@@ -20,6 +21,7 @@ type pages = {
   downloadPath: string;
   frames: FramesPage;
   dynamic: DynamicPage;
+  orangeCrmDashboard: DashboardPage;
 };
 
 export const test = base.extend<pages>({
@@ -57,6 +59,12 @@ export const test = base.extend<pages>({
   },
   dynamic: async ({ page }, use) => {
     await use(new DynamicPage(page));
+  },
+  orangeCrmDashboard: async ({ page }, use) => {
+    await page.goto(
+      "https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index"
+    );
+    await use(new DashboardPage(page));
   },
 
   // Download path fixture
