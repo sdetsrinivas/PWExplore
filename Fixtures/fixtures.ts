@@ -8,6 +8,7 @@ import { DownloadPage } from "../Pages/download";
 import { AlertPage } from "../Pages/alert";
 import { WindowsPage } from "../Pages/windows";
 import { FramesPage } from "../Pages/frames";
+import { DynamicPage } from "../Pages/dynamic";
 
 type pages = {
   // Define any custom fixtures here if needed
@@ -18,6 +19,7 @@ type pages = {
   windows: WindowsPage;
   downloadPath: string;
   frames: FramesPage;
+  dynamic: DynamicPage;
 };
 
 export const test = base.extend<pages>({
@@ -52,6 +54,9 @@ export const test = base.extend<pages>({
   },
   frames: async ({ page }, use) => {
     await use(new FramesPage(page));
+  },
+  dynamic: async ({ page }, use) => {
+    await use(new DynamicPage(page));
   },
 
   // Download path fixture
