@@ -1,4 +1,5 @@
 import { test, expect } from "../Fixtures/fixtures";
+import { Common } from "../Utils/common";
 
 test("Verify user can enter first and last name", async ({ register }) => {
   await register.navigate();
@@ -63,4 +64,23 @@ test("verify user can select a given skill dropdown", async ({ register }) => {
   await register.navigate();
   await register.skillsDropdown.selectOption("Java");
   await expect(register.skillsDropdown).toHaveValue("Java");
+});
+
+test("verify user can move the slider to a given value", async ({
+  register,
+  page,
+}) => {
+  await register.navigate();
+  await page.getByRole("link", { name: "Widgets" }).click();
+  await page.getByRole("link", { name: "Slider" }).click();
+  // Use reusable helper to drag slider to 75 and assert position
+  const percent = await Common.dragSlider(
+    page,
+    "div#slider",
+    ".ui-slider-handle",
+    75
+  );
+  console.log("Slider percent:", percent);
+  expect(percent).toBeGreaterThanOrEqual(73);
+  expect(percent).toBeLessThanOrEqual(77);
 });
