@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "firstName": "Johnny",
+      "lastName": "Boy"
+    },
+    {
+      "firstName": "Alexa",
+      "lastName": "Anderson"
+    },
+    {
+      "firstName": "Palani",
+      "lastName": "Murugan"
+    }
+  ]
+}

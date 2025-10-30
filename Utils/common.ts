@@ -1,5 +1,7 @@
 import fs from "fs/promises";
 import { Page } from "@playwright/test";
+import { parse } from "csv-parse/sync";
+import fsp from "fs";
 
 export class Common {
   public static async checkFileExists(filePath: string): Promise<boolean> {
@@ -63,5 +65,14 @@ export class Common {
     );
 
     return percent;
+  }
+
+  public static async readCsv(filePath: string): Promise<any> {
+    const content = fsp.readFileSync(filePath, "utf-8");
+    const records = parse(content, {
+      columns: true, // use first row as headers
+      skip_empty_lines: true,
+    });
+    return records;
   }
 }
