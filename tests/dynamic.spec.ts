@@ -1,17 +1,14 @@
 import { test, expect } from "../Fixtures/fixtures";
 
-test("verify user can verify generated data", async ({ dynamic, page }) => {
+test("verify user can verify generated data using spinner state", async ({
+  dynamic,
+}) => {
   await dynamic.navigate();
   await dynamic.clickClickBtn();
-  await Promise.all([
-    page.waitForLoadState("domcontentloaded"),
-    dynamic.personImg.waitFor({ state: "visible" }),
-    dynamic.personData.waitFor({ state: "visible" }),
-  ]);
+  await dynamic.spinnerImg.waitFor({ state: "visible" });
+  await dynamic.spinnerImg.waitFor({ state: "hidden" });
   await expect(dynamic.personImg).toBeVisible();
   await expect(dynamic.personData).toBeVisible();
-
-  console.log(await dynamic.personData.textContent());
 
   //Verify the text contain the regrex  pattern for first name that starts with capital letter
   const firstPersonName = await dynamic.personData.textContent();
@@ -22,19 +19,12 @@ test("verify user can verify generated data", async ({ dynamic, page }) => {
   expect(firstPersonName!).toMatch(firstNamePattern);
   expect(firstPersonName!).toMatch(lastNamePattern);
 
-  //Print first and last name
-  const firstName = firstPersonName!.match(firstNamePattern)?.[1];
-  const lastName = firstPersonName!.match(lastNamePattern)?.[1];
-
-  console.log(`First Name: ${firstName}`);
-  console.log(`Last Name: ${lastName}`);
-
+  console.log(await dynamic.personData.textContent());
   await dynamic.clickClickBtn();
-  await Promise.all([
-    page.waitForLoadState("domcontentloaded"),
-    dynamic.personImg.waitFor({ state: "visible" }),
-    dynamic.personData.waitFor({ state: "visible" }),
-  ]);
+  await dynamic.spinnerImg.waitFor({ state: "visible" });
+  await dynamic.spinnerImg.waitFor({ state: "hidden" });
+  await expect(dynamic.personImg).toBeVisible();
+  await expect(dynamic.personData).toBeVisible();
 
   const secondPersonName = await dynamic.personData.textContent();
   await expect(dynamic.personImg).toBeVisible();
@@ -42,4 +32,28 @@ test("verify user can verify generated data", async ({ dynamic, page }) => {
 
   expect(secondPersonName!).toMatch(firstNamePattern);
   expect(secondPersonName!).toMatch(lastNamePattern);
+});
+
+test("verify user can validate the dynamic content ", async ({
+  page,
+  dynamic,
+}) => {
+  await dynamic.navigate();
+  await dynamic.clickClickBtn();
+  await expect(dynamic.personImg).toBeVisible();
+  await expect(dynamic.personData).toBeVisible();
+  const firstPersonName = await dynamic.personData.textContent();
+  await dynamic.clickClickBtn();
+  await page.waitForFunction(
+    (oldContent) => {
+      const newContent = document.querySelector("div#loading")?.textContent;
+      return newContent && newContent !== oldContent;
+    },
+    firstPersonName,
+    { timeout: 5000 } // 10 seconds
+  );
+  const secondPersonName = await dynamic.personData.textContent();
+  console.log("First Person Data: " + firstPersonName);
+  console.log("Second Person Data: " + secondPersonName);
+  expect(firstPersonName).not.toBe(secondPersonName);
 });

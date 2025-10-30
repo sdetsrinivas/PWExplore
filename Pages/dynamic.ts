@@ -5,6 +5,7 @@ export class DynamicPage {
   readonly generateBtn: Locator;
   readonly personImg: Locator;
   readonly personData: Locator;
+  readonly spinnerImg: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -13,6 +14,7 @@ export class DynamicPage {
     });
     this.personImg = this.page.locator("div#loading>img[src*=random]");
     this.personData = this.page.locator("div#loading");
+    this.spinnerImg = this.page.locator("div#loading>img[src*=gif]");
   }
 
   async navigate() {
