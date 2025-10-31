@@ -45,20 +45,22 @@ export default defineConfig({
       testDir: "./tests",
       use: { ...devices["Desktop Chrome"] },
     },
-    {
-      name: "setup",
-      use: { ...devices["Desktop Chrome"] },
-      testDir: "./Setup",
-    },
-    {
-      name: "orangeCRM",
-      testDir: "./tests-crm",
-      use: {
-        ...devices["Desktop Chrome"],
-        storageState: "auth/storageState.json",
-      },
-      dependencies: ["setup"],
-    },
+
+    //commenting this because orangeCRM site is not up always
+    // {
+    //   name: "setup",
+    //   use: { ...devices["Desktop Chrome"] },
+    //   testDir: "./Setup",
+    // },
+    // {
+    //   name: "orangeCRM",
+    //   testDir: "./tests-crm",
+    //   use: {
+    //     ...devices["Desktop Chrome"],
+    //     storageState: "auth/storageState.json",
+    //   },
+    //   dependencies: ["setup"],
+    // },
 
     // {
     //   name: 'firefox',
